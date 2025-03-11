@@ -1,16 +1,12 @@
-import {
-  json,
-  type MetaArgs,
-  type LoaderFunctionArgs,
-} from '@shopify/remix-oxygen';
+import {type MetaArgs, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {Analytics, getSeoMeta} from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
-// import {ProductCard} from '~/components/ProductCard';
-
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import {seoPayload} from '~/lib/seo.server';
+import {COLLECTION_QUERY} from '~/graphql';
+import {ProductCard} from '~/components/ProductCard';
+import type {ProductCardFragment} from 'storefrontapi.generated';
 
 export async function loader({params, request, context}: LoaderFunctionArgs) {
   const {collectionHandle} = params;
@@ -48,6 +44,9 @@ export default function Collection() {
   return (
     <>
       <div>Collection</div>
+      {collection?.products?.nodes?.map((product: ProductCardFragment) => (
+        <ProductCard product={product} key={product.id} />
+      ))}
       <Analytics.CollectionView
         data={{
           collection: {
@@ -59,43 +58,3 @@ export default function Collection() {
     </>
   );
 }
-
-const COLLECTION_QUERY = `#graphql
-  query CollectionDetails(
-    $handle: String!
-    $country: CountryCode
-    $language: LanguageCode
-  ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      seo {
-        description
-        title
-      }
-      image {
-        id
-        url
-        width
-        height
-        altText
-      }
-      products(
-        first: 250
-      ) {
-        nodes {
-          ...ProductCard
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          endCursor
-          startCursor
-        }
-      }
-    }
-  }
-  ${PRODUCT_CARD_FRAGMENT}
-` as const;

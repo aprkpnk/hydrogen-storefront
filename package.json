@@ -13,7 +13,8 @@
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "format": "prettier --write --ignore-unknown .",
     "format:check": "prettier --check --ignore-unknown .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "codegen": "shopify hydrogen codegen"
   },
   "browserslist": [
     "defaults"
@@ -24,6 +25,7 @@
     "@remix-run/node": "^2.15.3",
     "@remix-run/react": "^2.15.3",
     "@remix-run/server-runtime": "^2.15.3",
+    "@shopify/api-codegen-preset": "^1.1.5",
     "@shopify/cli": "^3.74.1",
     "@shopify/hydrogen": "^2025.1.1",
     "@shopify/remix-oxygen": "^2.0.10",

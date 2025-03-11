@@ -4,6 +4,16 @@ import type {
   LanguageCode,
 } from '@shopify/hydrogen/storefront-api-types';
 
+import {
+  ARTICLE_SITEMAP_QUERY,
+  BLOG_SITEMAP_QUERY,
+  COLLECTION_SITEMAP_QUERY,
+  METAOBJECT_SITEMAP_QUERY,
+  PAGE_SITEMAP_QUERY,
+  PRODUCT_SITEMAP_QUERY,
+  SITEMAP_INDEX_QUERY,
+} from '~/graphql';
+
 const SITEMAP_INDEX_PREFIX = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 const SITEMAP_INDEX_SUFFIX = `</sitemapindex>`;
@@ -50,7 +60,7 @@ export async function getSitemapIndex({
     SITEMAP_INDEX_PREFIX +
     types
       .map((type) =>
-        getSiteMapLinks(type, data[type].pagesCount.count, baseUrl),
+        getSiteMapLinks(type, data?.[type]?.pagesCount?.count || 0, baseUrl),
       )
       .join('\n') +
     customUrls
@@ -206,122 +216,6 @@ ${locales
 function renderAlternateTag(url: string, locale: string) {
   return `  <xhtml:link rel="alternate" hreflang="${locale}" href="${url}" />`;
 }
-
-const PRODUCT_SITEMAP_QUERY = `#graphql
-    query SitemapProducts($page: Int!) {
-      sitemap(type: PRODUCT) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-          }
-        }
-      }
-    }
-` as const;
-
-const COLLECTION_SITEMAP_QUERY = `#graphql
-    query SitemapCollections($page: Int!) {
-      sitemap(type: COLLECTION) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-          }
-        }
-      }
-    }
-` as const;
-
-const ARTICLE_SITEMAP_QUERY = `#graphql
-    query SitemapArticles($page: Int!) {
-      sitemap(type: ARTICLE) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-          }
-        }
-      }
-    }
-` as const;
-
-const PAGE_SITEMAP_QUERY = `#graphql
-    query SitemapPages($page: Int!) {
-      sitemap(type: PAGE) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-          }
-        }
-      }
-    }
-` as const;
-
-const BLOG_SITEMAP_QUERY = `#graphql
-    query SitemapBlogs($page: Int!) {
-      sitemap(type: BLOG) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-          }
-        }
-      }
-    }
-` as const;
-
-const METAOBJECT_SITEMAP_QUERY = `#graphql
-    query SitemapMetaobjects($page: Int!) {
-      sitemap(type: METAOBJECT_PAGE) {
-        resources(page: $page) {
-          items {
-            handle
-            updatedAt
-            ... on SitemapResourceMetaobject {
-              type
-            }
-          }
-        }
-      }
-    }
-` as const;
-
-const SITEMAP_INDEX_QUERY = `#graphql
-query SitemapIndex {
-  products: sitemap(type: PRODUCT) {
-    pagesCount {
-      count
-    }
-  }
-  collections: sitemap(type: COLLECTION) {
-    pagesCount {
-      count
-    }
-  }
-  articles: sitemap(type: ARTICLE) {
-    pagesCount {
-      count
-    }
-  }
-  pages: sitemap(type: PAGE) {
-    pagesCount {
-      count
-    }
-  }
-  blogs: sitemap(type: BLOG) {
-    pagesCount {
-      count
-    }
-  }
-  metaObjects: sitemap(type: METAOBJECT_PAGE) {
-    pagesCount {
-      count
-    }
-  }
-}
-` as const;
 
 const QUERIES = {
   products: PRODUCT_SITEMAP_QUERY,
