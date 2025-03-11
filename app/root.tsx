@@ -6,7 +6,6 @@ import {
   type MetaArgs,
 } from '@shopify/remix-oxygen';
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
@@ -25,11 +24,8 @@ import {
 } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
-import {PageLayout} from '~/components/PageLayout';
-import {GenericError} from '~/components/GenericError';
-import {NotFound} from '~/components/NotFound';
-import favicon from '~/assets/favicon.svg';
 import {seoPayload} from '~/lib/seo.server';
+import favicon from '~/assets/favicon.svg';
 import styles from '~/styles/app.css?url';
 
 import {DEFAULT_LOCALE, parseMenu} from './lib/utils';
@@ -161,12 +157,7 @@ function Layout({children}: {children?: React.ReactNode}) {
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout
-              key={`${locale.language}-${locale.country}`}
-              layout={data.layout}
-            >
-              {children}
-            </PageLayout>
+            {children}
           </Analytics.Provider>
         ) : (
           children
@@ -186,35 +177,10 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({error}: {error: Error}) {
+export function ErrorBoundary() {
   const routeError = useRouteError();
-  const isRouteError = isRouteErrorResponse(routeError);
 
-  let title = 'Error';
-  let pageType = 'page';
-
-  if (isRouteError) {
-    title = 'Not found';
-    if (routeError.status === 404) pageType = routeError.data || pageType;
-  }
-
-  return (
-    <Layout>
-      {isRouteError ? (
-        <>
-          {routeError.status === 404 ? (
-            <NotFound type={pageType} />
-          ) : (
-            <GenericError
-              error={{message: `${routeError.status} ${routeError.data}`}}
-            />
-          )}
-        </>
-      ) : (
-        <GenericError error={error instanceof Error ? error : undefined} />
-      )}
-    </Layout>
-  );
+  return <Layout>Error</Layout>;
 }
 
 const LAYOUT_QUERY = `#graphql
