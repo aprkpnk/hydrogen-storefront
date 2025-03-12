@@ -1,4 +1,4 @@
-import {PRODUCT_CARD_FRAGMENT} from './fragments';
+import { PRODUCT_CARD_FRAGMENT } from './fragments'
 
 export const COLLECTION_QUERY = `#graphql
   query CollectionDetails(
@@ -38,4 +38,4 @@ export const COLLECTION_QUERY = `#graphql
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
-` as const;
+` as const

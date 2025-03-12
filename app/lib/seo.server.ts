@@ -1,4 +1,4 @@
-import {type SeoConfig} from '@shopify/hydrogen';
+import { type SeoConfig } from '@shopify/hydrogen'
 import type {
   Article,
   Blog,
@@ -7,8 +7,8 @@ import type {
   Product,
   ProductVariant,
   ShopPolicy,
-  Image,
-} from '@shopify/hydrogen/storefront-api-types';
+  Image
+} from '@shopify/hydrogen/storefront-api-types'
 import type {
   Article as SeoArticle,
   BreadcrumbList,
@@ -17,17 +17,17 @@ import type {
   Offer,
   Organization,
   Product as SeoProduct,
-  WebPage,
-} from 'schema-dts';
+  WebPage
+} from 'schema-dts'
 
-import type {ShopFragment} from 'storefrontapi.generated';
+import type { ShopFragment } from 'storefrontapi.generated'
 
 function root({
   shop,
-  url,
+  url
 }: {
-  shop: ShopFragment;
-  url: Request['url'];
+  shop: ShopFragment
+  url: Request['url']
 }): SeoConfig {
   return {
     title: shop?.name,
@@ -37,7 +37,7 @@ function root({
     url,
     robots: {
       noIndex: false,
-      noFollow: false,
+      noFollow: false
     },
     jsonLd: {
       '@context': 'https://schema.org',
@@ -49,19 +49,19 @@ function root({
         'https://facebook.com/shopify',
         'https://instagram.com/shopify',
         'https://youtube.com/shopify',
-        'https://tiktok.com/@shopify',
+        'https://tiktok.com/@shopify'
       ],
       url,
       potentialAction: {
         '@type': 'SearchAction',
         target: `${url}search?q={search_term}`,
-        query: "required name='search_term'",
-      },
-    },
-  };
+        query: "required name='search_term'"
+      }
+    }
+  }
 }
 
-function home({url}: {url: Request['url']}): SeoConfig {
+function home({ url }: { url: Request['url'] }): SeoConfig {
   return {
     title: 'Home',
     titleTemplate: '%s | Hydrogen Demo Store',
@@ -69,19 +69,19 @@ function home({url}: {url: Request['url']}): SeoConfig {
     url,
     robots: {
       noIndex: false,
-      noFollow: false,
+      noFollow: false
     },
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Home page',
-    },
-  };
+      name: 'Home page'
+    }
+  }
 }
 
 type SelectedVariantRequiredFields = Pick<ProductVariant, 'sku'> & {
-  image?: null | Partial<Image>;
-};
+  image?: null | Partial<Image>
+}
 
 type ProductRequiredFields = Pick<
   Product,
@@ -92,31 +92,31 @@ type ProductRequiredFields = Pick<
       ProductVariant,
       'sku' | 'price' | 'selectedOptions' | 'availableForSale'
     >
-  >;
-};
+  >
+}
 
 function productJsonLd({
   product,
   selectedVariant,
-  url,
+  url
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
-  url: Request['url'];
+  product: ProductRequiredFields
+  selectedVariant: SelectedVariantRequiredFields
+  url: Request['url']
 }): SeoConfig['jsonLd'] {
-  const origin = new URL(url).origin;
-  const variants = product.variants;
+  const origin = new URL(url).origin
+  const variants = product.variants
   const description = truncate(
-    product?.seo?.description ?? product?.description,
-  );
+    product?.seo?.description ?? product?.description
+  )
   const offers: Offer[] = (variants || []).map((variant) => {
-    const variantUrl = new URL(url);
+    const variantUrl = new URL(url)
     for (const option of variant.selectedOptions) {
-      variantUrl.searchParams.set(option.name, option.value);
+      variantUrl.searchParams.set(option.name, option.value)
     }
     const availability = variant.availableForSale
       ? 'https://schema.org/InStock'
-      : 'https://schema.org/OutOfStock';
+      : 'https://schema.org/OutOfStock'
 
     return {
       '@type': 'Offer',
@@ -124,9 +124,9 @@ function productJsonLd({
       price: parseFloat(variant.price.amount),
       priceCurrency: variant.price.currencyCode,
       sku: variant?.sku ?? '',
-      url: variantUrl.toString(),
-    };
-  });
+      url: variantUrl.toString()
+    }
+  })
   return [
     {
       '@context': 'https://schema.org',
@@ -136,80 +136,80 @@ function productJsonLd({
           '@type': 'ListItem',
           position: 1,
           name: 'Products',
-          item: `${origin}/products`,
+          item: `${origin}/products`
         },
         {
           '@type': 'ListItem',
           position: 2,
-          name: product.title,
-        },
-      ],
+          name: product.title
+        }
+      ]
     },
     {
       '@context': 'https://schema.org',
       '@type': 'Product',
       brand: {
         '@type': 'Brand',
-        name: product.vendor,
+        name: product.vendor
       },
       description,
       image: [selectedVariant?.image?.url ?? ''],
       name: product.title,
       offers,
       sku: selectedVariant?.sku ?? '',
-      url,
-    },
-  ];
+      url
+    }
+  ]
 }
 
 function product({
   product,
   url,
-  selectedVariant,
+  selectedVariant
 }: {
-  product: ProductRequiredFields;
-  selectedVariant: SelectedVariantRequiredFields;
-  url: Request['url'];
+  product: ProductRequiredFields
+  selectedVariant: SelectedVariantRequiredFields
+  url: Request['url']
 }): SeoConfig {
   const description = truncate(
-    product?.seo?.description ?? product?.description ?? '',
-  );
+    product?.seo?.description ?? product?.description ?? ''
+  )
   return {
     title: product?.seo?.title ?? product?.title,
     description,
     url,
     media: selectedVariant?.image,
-    jsonLd: productJsonLd({product, selectedVariant, url}),
-  };
+    jsonLd: productJsonLd({ product, selectedVariant, url })
+  }
 }
 
 type CollectionRequiredFields = Omit<
   Collection,
   'products' | 'descriptionHtml' | 'metafields' | 'image' | 'updatedAt'
 > & {
-  products: {nodes: Pick<Product, 'handle'>[]};
-  image?: null | Pick<Image, 'url' | 'height' | 'width' | 'altText'>;
-  descriptionHtml?: null | Collection['descriptionHtml'];
-  updatedAt?: null | Collection['updatedAt'];
-  metafields?: null | Collection['metafields'];
-};
+  products: { nodes: Pick<Product, 'handle'>[] }
+  image?: null | Pick<Image, 'url' | 'height' | 'width' | 'altText'>
+  descriptionHtml?: null | Collection['descriptionHtml']
+  updatedAt?: null | Collection['updatedAt']
+  metafields?: null | Collection['metafields']
+}
 
 function collectionJsonLd({
   url,
-  collection,
+  collection
 }: {
-  url: Request['url'];
-  collection: CollectionRequiredFields;
+  url: Request['url']
+  collection: CollectionRequiredFields
 }): SeoConfig['jsonLd'] {
-  const siteUrl = new URL(url);
+  const siteUrl = new URL(url)
   const itemListElement: CollectionPage['mainEntity'] =
     collection.products.nodes.map((product, index) => {
       return {
         '@type': 'ListItem',
         position: index + 1,
-        url: `/products/${product.handle}`,
-      };
-    });
+        url: `/products/${product.handle}`
+      }
+    })
 
   return [
     {
@@ -220,43 +220,43 @@ function collectionJsonLd({
           '@type': 'ListItem',
           position: 1,
           name: 'Collections',
-          item: `${siteUrl.host}/collections`,
+          item: `${siteUrl.host}/collections`
         },
         {
           '@type': 'ListItem',
           position: 2,
-          name: collection.title,
-        },
-      ],
+          name: collection.title
+        }
+      ]
     },
     {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: collection?.seo?.title ?? collection?.title ?? '',
       description: truncate(
-        collection?.seo?.description ?? collection?.description ?? '',
+        collection?.seo?.description ?? collection?.description ?? ''
       ),
       image: collection?.image?.url,
       url: `/collections/${collection.handle}`,
       mainEntity: {
         '@type': 'ItemList',
-        itemListElement,
-      },
-    },
-  ];
+        itemListElement
+      }
+    }
+  ]
 }
 
 function collection({
   collection,
-  url,
+  url
 }: {
-  collection: CollectionRequiredFields;
-  url: Request['url'];
+  collection: CollectionRequiredFields
+  url: Request['url']
 }): SeoConfig {
   return {
     title: collection?.seo?.title,
     description: truncate(
-      collection?.seo?.description ?? collection?.description ?? '',
+      collection?.seo?.description ?? collection?.description ?? ''
     ),
     titleTemplate: '%s | Collection',
     url,
@@ -265,32 +265,32 @@ function collection({
       url: collection?.image?.url,
       height: collection?.image?.height,
       width: collection?.image?.width,
-      altText: collection?.image?.altText,
+      altText: collection?.image?.altText
     },
-    jsonLd: collectionJsonLd({collection, url}),
-  };
+    jsonLd: collectionJsonLd({ collection, url })
+  }
 }
 
 type CollectionListRequiredFields = {
-  nodes: Omit<CollectionRequiredFields, 'products'>[];
-};
+  nodes: Omit<CollectionRequiredFields, 'products'>[]
+}
 
 function collectionsJsonLd({
   url,
-  collections,
+  collections
 }: {
-  url: Request['url'];
-  collections: CollectionListRequiredFields;
+  url: Request['url']
+  collections: CollectionListRequiredFields
 }): SeoConfig['jsonLd'] {
   const itemListElement: CollectionPage['mainEntity'] = collections.nodes.map(
     (collection, index) => {
       return {
         '@type': 'ListItem',
         position: index + 1,
-        url: `/collections/${collection.handle}`,
-      };
-    },
-  );
+        url: `/collections/${collection.handle}`
+      }
+    }
+  )
 
   return {
     '@context': 'https://schema.org',
@@ -300,30 +300,30 @@ function collectionsJsonLd({
     url,
     mainEntity: {
       '@type': 'ItemList',
-      itemListElement,
-    },
-  };
+      itemListElement
+    }
+  }
 }
 
 function listCollections({
   collections,
-  url,
+  url
 }: {
-  collections: CollectionListRequiredFields;
-  url: Request['url'];
+  collections: CollectionListRequiredFields
+  url: Request['url']
 }): SeoConfig {
   return {
     title: 'Collections',
     titleTemplate: '%s | Collections',
     description: 'All hydrogen collections',
     url,
-    jsonLd: collectionsJsonLd({collections, url}),
-  };
+    jsonLd: collectionsJsonLd({ collections, url })
+  }
 }
 
 function article({
   article,
-  url,
+  url
 }: {
   article: Pick<
     Article,
@@ -332,9 +332,9 @@ function article({
     image?: null | Pick<
       NonNullable<Article['image']>,
       'url' | 'height' | 'width' | 'altText'
-    >;
-  };
-  url: Request['url'];
+    >
+  }
+  url: Request['url']
 }): SeoConfig {
   return {
     title: article?.seo?.title ?? article?.title,
@@ -346,7 +346,7 @@ function article({
       url: article?.image?.url,
       height: article?.image?.height,
       width: article?.image?.width,
-      altText: article?.image?.altText,
+      altText: article?.image?.altText
     },
     jsonLd: {
       '@context': 'https://schema.org',
@@ -355,21 +355,21 @@ function article({
       articleBody: article.contentHtml,
       datePublished: article?.publishedAt,
       description: truncate(
-        article?.seo?.description || article?.excerpt || '',
+        article?.seo?.description || article?.excerpt || ''
       ),
       headline: article?.seo?.title || '',
       image: article?.image?.url,
-      url,
-    },
-  };
+      url
+    }
+  }
 }
 
 function blog({
   blog,
-  url,
+  url
 }: {
-  blog: Pick<Blog, 'seo' | 'title'>;
-  url: Request['url'];
+  blog: Pick<Blog, 'seo' | 'title'>
+  url: Request['url']
 }): SeoConfig {
   return {
     title: blog?.seo?.title,
@@ -381,17 +381,17 @@ function blog({
       '@type': 'Blog',
       name: blog?.seo?.title || blog?.title || '',
       description: blog?.seo?.description || '',
-      url,
-    },
-  };
+      url
+    }
+  }
 }
 
 function page({
   page,
-  url,
+  url
 }: {
-  page: Pick<Page, 'title' | 'seo'>;
-  url: Request['url'];
+  page: Pick<Page, 'title' | 'seo'>
+  url: Request['url']
 }): SeoConfig {
   return {
     description: truncate(page?.seo?.description || ''),
@@ -401,34 +401,34 @@ function page({
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: page.title,
-    },
-  };
+      name: page.title
+    }
+  }
 }
 
 function policy({
   policy,
-  url,
+  url
 }: {
-  policy: Pick<ShopPolicy, 'title' | 'body'>;
-  url: Request['url'];
+  policy: Pick<ShopPolicy, 'title' | 'body'>
+  url: Request['url']
 }): SeoConfig {
   return {
     description: truncate(policy?.body ?? ''),
     title: policy?.title,
     titleTemplate: '%s | Policy',
-    url,
-  };
+    url
+  }
 }
 
 function policies({
   policies,
-  url,
+  url
 }: {
-  policies: Array<Pick<ShopPolicy, 'title' | 'handle'>>;
-  url: Request['url'];
+  policies: Array<Pick<ShopPolicy, 'title' | 'handle'>>
+  url: Request['url']
 }): SeoConfig {
-  const origin = new URL(url).origin;
+  const origin = new URL(url).origin
   const itemListElement: BreadcrumbList['itemListElement'] = policies
     .filter(Boolean)
     .map((policy, index) => {
@@ -436,9 +436,9 @@ function policies({
         '@type': 'ListItem',
         position: index + 1,
         name: policy.title,
-        item: `${origin}/policies/${policy.handle}`,
-      };
-    });
+        item: `${origin}/policies/${policy.handle}`
+      }
+    })
   return {
     title: 'Policies',
     titleTemplate: '%s | Policies',
@@ -447,17 +447,17 @@ function policies({
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
-        itemListElement,
+        itemListElement
       },
       {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         description: 'Hydrogen store policies',
         name: 'Policies',
-        url,
-      },
-    ],
-  };
+        url
+      }
+    ]
+  }
 }
 
 export const seoPayload = {
@@ -470,8 +470,8 @@ export const seoPayload = {
   policies,
   policy,
   product,
-  root,
-};
+  root
+}
 
 /**
  * Truncate a string to a given length, adding an ellipsis if it was truncated
@@ -484,9 +484,9 @@ export const seoPayload = {
  * ```
  */
 function truncate(str: string, num = 155): string {
-  if (typeof str !== 'string') return '';
+  if (typeof str !== 'string') return ''
   if (str.length <= num) {
-    return str;
+    return str
   }
-  return str.slice(0, num - 3) + '...';
+  return str.slice(0, num - 3) + '...'
 }

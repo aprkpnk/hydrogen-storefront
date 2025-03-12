@@ -9,7 +9,7 @@ export const PRODUCT_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const COLLECTION_SITEMAP_QUERY = `#graphql
     query SitemapCollections($page: Int!) {
@@ -22,7 +22,7 @@ export const COLLECTION_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const ARTICLE_SITEMAP_QUERY = `#graphql
     query SitemapArticles($page: Int!) {
@@ -35,7 +35,7 @@ export const ARTICLE_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const PAGE_SITEMAP_QUERY = `#graphql
     query SitemapPages($page: Int!) {
@@ -48,7 +48,7 @@ export const PAGE_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const BLOG_SITEMAP_QUERY = `#graphql
     query SitemapBlogs($page: Int!) {
@@ -61,7 +61,7 @@ export const BLOG_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const METAOBJECT_SITEMAP_QUERY = `#graphql
     query SitemapMetaobjects($page: Int!) {
@@ -77,7 +77,7 @@ export const METAOBJECT_SITEMAP_QUERY = `#graphql
         }
       }
     }
-` as const;
+` as const
 
 export const SITEMAP_INDEX_QUERY = `#graphql
 query SitemapIndex {
@@ -112,4 +112,4 @@ query SitemapIndex {
     }
   }
 }
-` as const;
+` as const

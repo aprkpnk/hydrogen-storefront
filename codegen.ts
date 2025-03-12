@@ -19,11 +19,5 @@ export default {
         '!./app/graphql/customer-account/**/*.{ts,tsx,js,jsx}',
       ],
     },
-    'customer-accountapi.generated.d.ts': {
-      preset,
-      schema:
-        'node_modules/@shopify/hydrogen-react/customer-account.schema.json',
-      documents: ['./app/graphql/customer-account/*.{ts,tsx,js,jsx}'],
-    },
   },
 } as CodegenConfig;

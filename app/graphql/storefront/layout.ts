@@ -52,4 +52,4 @@ export const LAYOUT_QUERY = `#graphql
       ...ParentMenuItem
     }
   }
-` as const;
+` as const

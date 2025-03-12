@@ -1,4 +1,4 @@
-import {Link} from '@remix-run/react';
+import { Link } from '@remix-run/react'
 
 export default function Homepage() {
   return (
@@ -7,5 +7,5 @@ export default function Homepage() {
         Collection Page
       </Link>
     </>
-  );
+  )
 }

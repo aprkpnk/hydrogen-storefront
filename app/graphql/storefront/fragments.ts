@@ -1,41 +1,20 @@
 export const MEDIA_FRAGMENT = `#graphql
-  fragment Media on Media {
+  fragment Media on MediaImage {
     __typename
     mediaContentType
     alt
     previewImage {
       url
     }
-    ... on MediaImage {
+    id
+    image {
       id
-      image {
-        id
-        url
-        width
-        height
-      }
-    }
-    ... on Video {
-      id
-      sources {
-        mimeType
-        url
-      }
-    }
-    ... on Model3d {
-      id
-      sources {
-        mimeType
-        url
-      }
-    }
-    ... on ExternalVideo {
-      id
-      embedUrl
-      host
+      url
+      width
+      height
     }
   }
-`;
+`
 
 export const PRODUCT_CARD_FRAGMENT = `#graphql
   fragment ProductCard on Product {
@@ -60,10 +39,6 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
           name
           value
         }
-        product {
-          handle
-          title
-        }
         media:metafield(namespace:"custom",key:"media") {
           references(first: 5) {
             nodes {
@@ -76,4 +51,4 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
   }
 
   ${MEDIA_FRAGMENT}
-` as const;
+` as const

@@ -38,52 +38,23 @@ export type CollectionDetailsQuery = {
                   selectedOptions: Array<
                     Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
                   >;
-                  product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
                   media?: StorefrontAPI.Maybe<{
                     references?: StorefrontAPI.Maybe<{
                       nodes: Array<
-                        | ({__typename: 'MediaImage'} & Pick<
-                            StorefrontAPI.MediaImage,
-                            'id' | 'mediaContentType' | 'alt'
-                          > & {
-                              image?: StorefrontAPI.Maybe<
-                                Pick<
-                                  StorefrontAPI.Image,
-                                  'id' | 'url' | 'width' | 'height'
-                                >
-                              >;
-                              previewImage?: StorefrontAPI.Maybe<
-                                Pick<StorefrontAPI.Image, 'url'>
-                              >;
-                            })
-                        | ({__typename: 'Model3d'} & Pick<
-                            StorefrontAPI.Model3d,
-                            'id' | 'mediaContentType' | 'alt'
-                          > & {
-                              sources: Array<
-                                Pick<
-                                  StorefrontAPI.Model3dSource,
-                                  'mimeType' | 'url'
-                                >
-                              >;
-                              previewImage?: StorefrontAPI.Maybe<
-                                Pick<StorefrontAPI.Image, 'url'>
-                              >;
-                            })
-                        | ({__typename: 'Video'} & Pick<
-                            StorefrontAPI.Video,
-                            'id' | 'mediaContentType' | 'alt'
-                          > & {
-                              sources: Array<
-                                Pick<
-                                  StorefrontAPI.VideoSource,
-                                  'mimeType' | 'url'
-                                >
-                              >;
-                              previewImage?: StorefrontAPI.Maybe<
-                                Pick<StorefrontAPI.Image, 'url'>
-                              >;
-                            })
+                        {__typename: 'MediaImage'} & Pick<
+                          StorefrontAPI.MediaImage,
+                          'mediaContentType' | 'alt' | 'id'
+                        > & {
+                            previewImage?: StorefrontAPI.Maybe<
+                              Pick<StorefrontAPI.Image, 'url'>
+                            >;
+                            image?: StorefrontAPI.Maybe<
+                              Pick<
+                                StorefrontAPI.Image,
+                                'id' | 'url' | 'width' | 'height'
+                              >
+                            >;
+                          }
                       >;
                     }>;
                   }>;
@@ -101,42 +72,15 @@ export type CollectionDetailsQuery = {
   >;
 };
 
-type Media_ExternalVideo_Fragment = {__typename: 'ExternalVideo'} & Pick<
-  StorefrontAPI.ExternalVideo,
-  'id' | 'embedUrl' | 'host' | 'mediaContentType' | 'alt'
-> & {previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>};
-
-type Media_MediaImage_Fragment = {__typename: 'MediaImage'} & Pick<
+export type MediaFragment = {__typename: 'MediaImage'} & Pick<
   StorefrontAPI.MediaImage,
-  'id' | 'mediaContentType' | 'alt'
+  'mediaContentType' | 'alt' | 'id'
 > & {
+    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
     image?: StorefrontAPI.Maybe<
       Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
     >;
-    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
   };
-
-type Media_Model3d_Fragment = {__typename: 'Model3d'} & Pick<
-  StorefrontAPI.Model3d,
-  'id' | 'mediaContentType' | 'alt'
-> & {
-    sources: Array<Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>>;
-    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
-  };
-
-type Media_Video_Fragment = {__typename: 'Video'} & Pick<
-  StorefrontAPI.Video,
-  'id' | 'mediaContentType' | 'alt'
-> & {
-    sources: Array<Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>>;
-    previewImage?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Image, 'url'>>;
-  };
-
-export type MediaFragment =
-  | Media_ExternalVideo_Fragment
-  | Media_MediaImage_Fragment
-  | Media_Model3d_Fragment
-  | Media_Video_Fragment;
 
 export type ProductCardFragment = Pick<
   StorefrontAPI.Product,
@@ -152,46 +96,20 @@ export type ProductCardFragment = Pick<
         selectedOptions: Array<
           Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
         >;
-        product: Pick<StorefrontAPI.Product, 'handle' | 'title'>;
         media?: StorefrontAPI.Maybe<{
           references?: StorefrontAPI.Maybe<{
             nodes: Array<
-              | ({__typename: 'MediaImage'} & Pick<
-                  StorefrontAPI.MediaImage,
-                  'id' | 'mediaContentType' | 'alt'
-                > & {
-                    image?: StorefrontAPI.Maybe<
-                      Pick<
-                        StorefrontAPI.Image,
-                        'id' | 'url' | 'width' | 'height'
-                      >
-                    >;
-                    previewImage?: StorefrontAPI.Maybe<
-                      Pick<StorefrontAPI.Image, 'url'>
-                    >;
-                  })
-              | ({__typename: 'Model3d'} & Pick<
-                  StorefrontAPI.Model3d,
-                  'id' | 'mediaContentType' | 'alt'
-                > & {
-                    sources: Array<
-                      Pick<StorefrontAPI.Model3dSource, 'mimeType' | 'url'>
-                    >;
-                    previewImage?: StorefrontAPI.Maybe<
-                      Pick<StorefrontAPI.Image, 'url'>
-                    >;
-                  })
-              | ({__typename: 'Video'} & Pick<
-                  StorefrontAPI.Video,
-                  'id' | 'mediaContentType' | 'alt'
-                > & {
-                    sources: Array<
-                      Pick<StorefrontAPI.VideoSource, 'mimeType' | 'url'>
-                    >;
-                    previewImage?: StorefrontAPI.Maybe<
-                      Pick<StorefrontAPI.Image, 'url'>
-                    >;
-                  })
+              {__typename: 'MediaImage'} & Pick<
+                StorefrontAPI.MediaImage,
+                'mediaContentType' | 'alt' | 'id'
+              > & {
+                  previewImage?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'url'>
+                  >;
+                  image?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Image, 'id' | 'url' | 'width' | 'height'>
+                  >;
+                }
             >;
           }>;
         }>;
@@ -416,7 +334,7 @@ export type SitemapIndexQuery = {
 };
 
 interface GeneratedQueryTypes {
-  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: 250\n      ) {\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    variants(first: 10) {\n      nodes {\n        id\n        availableForSale\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        product {\n          handle\n          title\n        }\n        media:metafield(namespace:"custom",key:"media") {\n          references(first: 5) {\n            nodes {\n              ...Media\n            }\n          }\n        }\n      }\n    }\n  }\n\n  #graphql\n  fragment Media on Media {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n      url\n    }\n    ... on MediaImage {\n      id\n      image {\n        id\n        url\n        width\n        height\n      }\n    }\n    ... on Video {\n      id\n      sources {\n        mimeType\n        url\n      }\n    }\n    ... on Model3d {\n      id\n      sources {\n        mimeType\n        url\n      }\n    }\n    ... on ExternalVideo {\n      id\n      embedUrl\n      host\n    }\n  }\n\n\n': {
+  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: 250\n      ) {\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    variants(first: 10) {\n      nodes {\n        id\n        availableForSale\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        media:metafield(namespace:"custom",key:"media") {\n          references(first: 5) {\n            nodes {\n              ...Media\n            }\n          }\n        }\n      }\n    }\n  }\n\n  #graphql\n  fragment Media on MediaImage {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n      url\n    }\n    id\n    image {\n      id\n      url\n      width\n      height\n    }\n  }\n\n\n': {
     return: CollectionDetailsQuery;
     variables: CollectionDetailsQueryVariables;
   };
