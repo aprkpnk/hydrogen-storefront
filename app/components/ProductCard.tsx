@@ -1,17 +1,18 @@
-import {flattenConnection} from '@shopify/hydrogen';
+import { flattenConnection } from '@shopify/hydrogen';
 
-import type {ProductCardFragment} from 'storefrontapi.generated';
+import type { ProductCardFragment } from 'storefrontapi.generated';
 
 export function ProductCard({
   product,
   className,
-  onClick,
+  onClick
 }: {
   product: ProductCardFragment;
   className?: string;
   onClick?: () => void;
 }) {
-  if (!product?.variants?.nodes?.length) return null;
+  const variants = product?.variants?.nodes;
+  if (!variants?.length) return null;
 
   const firstVariant = flattenConnection(product.variants)[0];
 

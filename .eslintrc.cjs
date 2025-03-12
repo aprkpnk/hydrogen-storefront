@@ -1,11 +1,14 @@
 /**
  * @type {import("@types/eslint").Linter.BaseConfig}
  */
+
+const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 module.exports = {
   extends: [
     '@remix-run/eslint-config',
     'plugin:hydrogen/recommended',
     'plugin:hydrogen/typescript',
+    eslintPluginPrettierRecommended,
   ],
   rules: {
     '@typescript-eslint/ban-ts-comment': 'off',
