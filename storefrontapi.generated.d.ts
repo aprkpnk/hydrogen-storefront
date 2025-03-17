@@ -25,6 +25,57 @@ export type CollectionDetailsQuery = {
             StorefrontAPI.Product,
             'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
           > & {
+            options: Array<
+              Pick<StorefrontAPI.ProductOption, 'id'> & {
+                optionValues: Array<
+                  Pick<StorefrontAPI.ProductOptionValue, 'id' | 'name'> & {
+                    swatch?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.ProductOptionValueSwatch, 'color'>
+                    >;
+                    firstSelectableVariant?: StorefrontAPI.Maybe<
+                      Pick<
+                        StorefrontAPI.ProductVariant,
+                        'id' | 'availableForSale'
+                      > & {
+                        price: Pick<
+                          StorefrontAPI.MoneyV2,
+                          'amount' | 'currencyCode'
+                        >;
+                        compareAtPrice?: StorefrontAPI.Maybe<
+                          Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                        >;
+                        selectedOptions: Array<
+                          Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+                        >;
+                        media?: StorefrontAPI.Maybe<{
+                          references?: StorefrontAPI.Maybe<{
+                            nodes: Array<
+                              {__typename: 'MediaImage'} & Pick<
+                                StorefrontAPI.MediaImage,
+                                'mediaContentType' | 'alt' | 'id'
+                              > & {
+                                  previewImage?: StorefrontAPI.Maybe<
+                                    Pick<StorefrontAPI.Image, 'url'>
+                                  >;
+                                  image?: StorefrontAPI.Maybe<
+                                    Pick<
+                                      StorefrontAPI.Image,
+                                      'id' | 'url' | 'width' | 'height'
+                                    >
+                                  >;
+                                }
+                            >;
+                          }>;
+                        }>;
+                        colorHex?: StorefrontAPI.Maybe<
+                          Pick<StorefrontAPI.Metafield, 'value'>
+                        >;
+                      }
+                    >;
+                  }
+                >;
+              }
+            >;
             variants: {
               nodes: Array<
                 Pick<
@@ -58,6 +109,9 @@ export type CollectionDetailsQuery = {
                       >;
                     }>;
                   }>;
+                  colorHex?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Metafield, 'value'>
+                  >;
                 }
               >;
             };
@@ -86,6 +140,51 @@ export type ProductCardFragment = Pick<
   StorefrontAPI.Product,
   'id' | 'title' | 'publishedAt' | 'handle' | 'vendor'
 > & {
+  options: Array<
+    Pick<StorefrontAPI.ProductOption, 'id'> & {
+      optionValues: Array<
+        Pick<StorefrontAPI.ProductOptionValue, 'id' | 'name'> & {
+          swatch?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.ProductOptionValueSwatch, 'color'>
+          >;
+          firstSelectableVariant?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale'> & {
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+              compareAtPrice?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+              >;
+              media?: StorefrontAPI.Maybe<{
+                references?: StorefrontAPI.Maybe<{
+                  nodes: Array<
+                    {__typename: 'MediaImage'} & Pick<
+                      StorefrontAPI.MediaImage,
+                      'mediaContentType' | 'alt' | 'id'
+                    > & {
+                        previewImage?: StorefrontAPI.Maybe<
+                          Pick<StorefrontAPI.Image, 'url'>
+                        >;
+                        image?: StorefrontAPI.Maybe<
+                          Pick<
+                            StorefrontAPI.Image,
+                            'id' | 'url' | 'width' | 'height'
+                          >
+                        >;
+                      }
+                  >;
+                }>;
+              }>;
+              colorHex?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value'>
+              >;
+            }
+          >;
+        }
+      >;
+    }
+  >;
   variants: {
     nodes: Array<
       Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale'> & {
@@ -113,6 +212,7 @@ export type ProductCardFragment = Pick<
             >;
           }>;
         }>;
+        colorHex?: StorefrontAPI.Maybe<Pick<StorefrontAPI.Metafield, 'value'>>;
       }
     >;
   };
@@ -334,7 +434,7 @@ export type SitemapIndexQuery = {
 };
 
 interface GeneratedQueryTypes {
-  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: 250\n      ) {\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    variants(first: 10) {\n      nodes {\n        id\n        availableForSale\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        media:metafield(namespace:"custom",key:"media") {\n          references(first: 5) {\n            nodes {\n              ...Media\n            }\n          }\n        }\n      }\n    }\n  }\n\n  #graphql\n  fragment Media on MediaImage {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n      url\n    }\n    id\n    image {\n      id\n      url\n      width\n      height\n    }\n  }\n\n\n': {
+  '#graphql\n  query CollectionDetails(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      seo {\n        description\n        title\n      }\n      image {\n        id\n        url\n        width\n        height\n        altText\n      }\n      products(\n        first: 250\n      ) {\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n  }\n  #graphql\n  fragment ProductCard on Product {\n    id\n    title\n    publishedAt\n    handle\n    vendor\n    options {\n      id\n      optionValues {\n        id\n        name\n        # this returns null so I added custom metafield to get color hex value\n        swatch {\n          color\n        }\n        firstSelectableVariant {\n          id\n          availableForSale\n          price {\n            amount\n            currencyCode\n          }\n          compareAtPrice {\n            amount\n            currencyCode\n          }\n          selectedOptions {\n            name\n            value\n          }\n          media:metafield(namespace:"custom",key:"media") {\n            references(first: 5) {\n              nodes {\n                ...Media\n              }\n            }\n          }\n          colorHex:metafield(namespace:"custom",key:"color_hex") {\n            value\n          }\n        }\n      }\n    }\n    variants(first: 10) {\n      nodes {\n        id\n        availableForSale\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n        media:metafield(namespace:"custom",key:"media") {\n          references(first: 5) {\n            nodes {\n              ...Media\n            }\n          }\n        }\n        colorHex:metafield(namespace:"custom",key:"color_hex") {\n          value\n        }\n      }\n    }\n  }\n\n  #graphql\n  fragment Media on MediaImage {\n    __typename\n    mediaContentType\n    alt\n    previewImage {\n      url\n    }\n    id\n    image {\n      id\n      url\n      width\n      height\n    }\n  }\n\n\n': {
     return: CollectionDetailsQuery;
     variables: CollectionDetailsQueryVariables;
   };

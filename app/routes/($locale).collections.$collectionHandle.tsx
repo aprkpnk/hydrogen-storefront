@@ -43,10 +43,12 @@ export default function Collection() {
 
   return (
     <>
-      <Link to="/" aria-label="home page">
-        Home
-      </Link>
-      <div>Collection</div>
+      <div className="flex font-roboto">
+        <Link to="/" aria-label="home page">
+          Home
+        </Link>
+        <div>/Collection</div>
+      </div>
       {collection?.products?.nodes?.map((product: ProductCardFragment) => (
         <ProductCard product={product} key={product.id} />
       ))}

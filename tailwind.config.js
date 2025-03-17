@@ -6,12 +6,6 @@ export default {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      colors: {
-        primary: 'rgb(var(--color-primary) / <alpha-value>)',
-        contrast: 'rgb(var(--color-contrast) / <alpha-value>)',
-        notice: 'rgb(var(--color-accent) / <alpha-value>)',
-        shopPay: 'rgb(var(--color-shop-pay) / <alpha-value>)',
-      },
       screens: {
         sm: '32em',
         md: '48em',
@@ -25,38 +19,34 @@ export default {
         'xl-only': {min: '80em', max: '96em'},
         '2xl-only': {min: '96em'},
       },
-      spacing: {
-        nav: 'var(--height-nav)',
-        screen: 'var(--screen-height, 100vh)',
-      },
-      height: {
-        screen: 'var(--screen-height, 100vh)',
-        'screen-no-nav':
-          'calc(var(--screen-height, 100vh) - var(--height-nav))',
-        'screen-dynamic': 'var(--screen-height-dynamic, 100vh)',
-      },
-      width: {
-        mobileGallery: 'calc(100vw - 3rem)',
-      },
       fontFamily: {
-        sans: ['Helvetica Neue', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['"IBMPlexSerif"', 'Palatino', 'ui-serif'],
-      },
-      fontSize: {
-        display: ['var(--font-size-display)', '1.1'],
-        heading: ['var(--font-size-heading)', '1.25'],
-        lead: ['var(--font-size-lead)', '1.333'],
-        copy: ['var(--font-size-copy)', '1.5'],
-        fine: ['var(--font-size-fine)', '1.333'],
+        roboto: ['Roboto', 'sans-serif'],
+        gothic: ['Franklin Gothic ATF', 'sans-serif'],
       },
       maxWidth: {
-        'prose-narrow': '45ch',
-        'prose-wide': '80ch',
+        369: '369px',
       },
-      boxShadow: {
-        border: 'inset 0px 0px 0px 1px rgb(var(--color-primary) / 0.08)',
-        darkHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4)',
-        lightHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)',
+      height: {
+        301: '301px',
+      },
+      lineHeight: {
+        base: '1.1',
+      },
+      padding: {
+        productCard: '27px 22px 34px',
+        badge: '7px 16px 3px',
+      },
+      aspectRatio: {
+        productCard: '275 / 301',
+      },
+      borderRadius: {
+        10: '10px',
+      },
+      borderColor: {
+        e8e8e8: '#E8E8E8',
+      },
+      spacing: {
+        '5px': '5px',
       },
     },
   },

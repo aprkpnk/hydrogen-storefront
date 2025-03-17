@@ -312,3 +312,9 @@ export function isLocalPath(url: string) {
 
   return false
 }
+
+export const convertToNum = (string?: string) => {
+  if (!string) return null
+
+  return Number(string).toFixed(2)
+}
